@@ -55,6 +55,8 @@ class Viewer:
     self.window.set_title( 'Sobot Rimulator' )
     self.window.set_resizable( False )
     self.window.connect( 'delete_event', self.on_delete )
+    self.window.set_events( gtk.gdk.BUTTON_PRESS_MASK )
+    # self.window.connect( 'button_press_event', self.side_menu_draw )
     
     # initialize the drawing_area
     self.drawing_area = gtk.DrawingArea()
@@ -129,6 +131,25 @@ class Viewer:
     self.button_draw_invisibles.set_image_position( gtk.POS_LEFT )
     self.button_draw_invisibles.connect( 'clicked', self.on_draw_invisibles )
     
+    # == Add right click menu
+
+    # Create Right Click Menu
+    self.right_click_menu = gtk.Menu()
+    self.window.connect_object("button_press_event", self.show_right_clicked_menu, self.right_click_menu)
+
+    # Create items for the menu
+    self.right_menu_add_robot_item = gtk.MenuItem("Add Robot")
+    self.right_menu_add_robot_item.connect( 'activate', self.add_robot, (0.0, 0.0) )
+    self.right_menu_add_robot_item.show()
+
+    self.right_menu_add_obstacle_item = gtk.MenuItem("Add Obstacles")
+    self.right_menu_add_obstacle_item.connect( 'activate', self.add_obstacle, (1.0, 1.0) )
+    self.right_menu_add_obstacle_item.show()
+
+    # Add items to the menu
+    self.right_click_menu.append(self.right_menu_add_robot_item)
+    self.right_click_menu.append(self.right_menu_add_obstacle_item)
+
     # == lay out the window
     
     # pack the simulation control buttons
@@ -210,6 +231,18 @@ class Viewer:
     
     
   # EVENT HANDLERS:
+  def show_right_clicked_menu(self, widget, event):
+    print 'Event [{}:{}]'.format(event.x, event.y)
+    if event.type == gtk.gdk.BUTTON_PRESS and event.button == 3:
+        widget.popup(None, None, None, event.button, event.time, event)
+
+  def add_robot(self, widget, param):
+    print 'Add robot: {}'.format(param)
+    print 'Widget : {}'.format(widget)
+
+  def add_obstacle(self, widget, param):
+    print 'Add obstacle: {}'.format(param)
+
   def on_play( self, widget ):
     self.simulator.play_sim()
     
