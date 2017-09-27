@@ -139,11 +139,11 @@ class Viewer:
 
     # Create items for the menu
     self.right_menu_add_robot_item = gtk.MenuItem("Add Robot")
-    self.right_menu_add_robot_item.connect( 'activate', self.add_robot, (0.0, 0.0) )
+    self.right_menu_add_robot_item.connect( 'activate', self.add_robot)
     self.right_menu_add_robot_item.show()
 
     self.right_menu_add_obstacle_item = gtk.MenuItem("Add Obstacles")
-    self.right_menu_add_obstacle_item.connect( 'activate', self.add_obstacle, (1.0, 1.0) )
+    self.right_menu_add_obstacle_item.connect( 'activate', self.add_obstacle)
     self.right_menu_add_obstacle_item.show()
 
     # Add items to the menu
@@ -232,12 +232,13 @@ class Viewer:
     
   # EVENT HANDLERS:
   def show_right_clicked_menu(self, widget, event):
+    print 'Event {}'.format(event)
     print 'Event [{}:{}]'.format(event.x, event.y)
     if event.type == gtk.gdk.BUTTON_PRESS and event.button == 3:
         widget.popup(None, None, None, event.button, event.time, event)
 
-  def add_robot(self, widget, param):
-    print 'Add robot: {}'.format(param)
+  def add_robot(self, widget):
+    # print 'Add robot: {}'.format(param)
     print 'Widget : {}'.format(widget)
 
   def add_obstacle(self, widget, param):
