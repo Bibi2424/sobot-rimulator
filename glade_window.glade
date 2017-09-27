@@ -194,6 +194,7 @@ forked and modifed by gd</property>
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <signal name="activate" handler="on_imagemenuitem_about_activate" swapped="no"/>
                       </object>
                     </child>
                   </object>

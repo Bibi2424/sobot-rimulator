@@ -9,11 +9,15 @@ class Simu:
 		
 		# self.myLabel = interface.get_object("myLabel")
 		self.button3 = interface.get_object("button3")
+		self.aboutdialog = interface.get_object("aboutdialog")
 		interface.connect_signals(self)
 
 	def on_main_window_destroy(self, widget):
 		print 'Quiting...'
 		gtk.main_quit()
+		
+	def on_imagemenuitem_about_activate(self, widget):
+		self.aboutdialog.show_all()
 
 	def on_button1_clicked(self, widget):
 		print ' Clicked button1'
@@ -24,6 +28,8 @@ class Simu:
 
 	def on_button2_clicked(self, widget):
 		print ' Clicked button2'
+
+
 
 if __name__ == "__main__":
 	Simu()
