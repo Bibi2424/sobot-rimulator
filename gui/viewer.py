@@ -124,6 +124,14 @@ class Viewer:
     self.button_random_map.set_image_position( gtk.POS_LEFT )
     self.button_random_map.connect( 'clicked', self.on_random_map )
     
+    # build the clear map buttons
+    self.button_clear_map = gtk.Button( 'Clear Map' )
+    clear_map_image = gtk.Image()
+    clear_map_image.set_from_stock( gtk.STOCK_CLEAR, gtk.ICON_SIZE_BUTTON )
+    self.button_clear_map.set_image( clear_map_image )
+    self.button_clear_map.set_image_position( gtk.POS_LEFT )
+    self.button_clear_map.connect( 'clicked', self.on_clear_map )
+    
     # build the draw-invisibles toggle button
     self.draw_invisibles = False                  # controls whether invisible world elements are displayed
     self.button_draw_invisibles = gtk.Button()
@@ -136,6 +144,8 @@ class Viewer:
     # Create Right Click Menu
     self.right_click_menu = gtk.Menu()
     self.window.connect_object("button_press_event", self.show_right_clicked_menu, self.right_click_menu)
+    self.cursor_x = None
+    self.cursor_y = None
 
     # Create items for the menu
     self.right_menu_add_robot_item = gtk.MenuItem("Add Robot")
@@ -146,9 +156,14 @@ class Viewer:
     self.right_menu_add_obstacle_item.connect( 'activate', self.add_obstacle)
     self.right_menu_add_obstacle_item.show()
 
+    self.right_menu_move_goal_item = gtk.MenuItem("Move Goal")
+    self.right_menu_move_goal_item.connect( 'activate', self.move_goal)
+    self.right_menu_move_goal_item.show()
+
     # Add items to the menu
     self.right_click_menu.append(self.right_menu_add_robot_item)
     self.right_click_menu.append(self.right_menu_add_obstacle_item)
+    self.right_click_menu.append(self.right_menu_move_goal_item)
 
     # == lay out the window
     
@@ -164,6 +179,7 @@ class Viewer:
     map_controls_box.pack_start( self.button_save_map, False, False )
     map_controls_box.pack_start( self.button_load_map, False, False )
     map_controls_box.pack_start( self.button_random_map, False, False )
+    map_controls_box.pack_start( self.button_clear_map, False, False )
     
     # pack the invisibles button
     invisibles_button_box = gtk.HBox()
@@ -232,8 +248,9 @@ class Viewer:
     
   # EVENT HANDLERS:
   def show_right_clicked_menu(self, widget, event):
-    print 'Event {}'.format(event)
-    print 'Event [{}:{}]'.format(event.x, event.y)
+    # print 'Event [{}:{}]'.format(event.x, event.y)
+    self.cursor_x = event.x
+    self.cursor_y = event.y
     if event.type == gtk.gdk.BUTTON_PRESS and event.button == 3:
         widget.popup(None, None, None, event.button, event.time, event)
 
@@ -241,8 +258,15 @@ class Viewer:
     # print 'Add robot: {}'.format(param)
     print 'Widget : {}'.format(widget)
 
-  def add_obstacle(self, widget, param):
-    print 'Add obstacle: {}'.format(param)
+  def add_obstacle(self, widget):
+    print 'Add obstacle: [{}:{}]'.format(self.cursor_x, self.cursor_y)
+    self.simulator.add_obstacle(self.cursor_x, self.cursor_y)
+
+  def move_goal(self, widget):
+    goal_x  = (self.cursor_x  - self.view_width_pixels/2) / self.pixels_per_meter
+    goal_y  = - (self.cursor_y  - self.view_height_pixels/2) / self.pixels_per_meter
+    print 'Move Gaol to [{}:{}]'.format(goal_x, goal_y)
+    self.simulator.move_goal(goal_x, goal_y)
 
   def on_play( self, widget ):
     self.simulator.play_sim()
@@ -303,6 +327,10 @@ class Viewer:
       
   def on_random_map( self, widget ):
     self.simulator.random_map()
+
+
+  def on_clear_map(self, widget):
+    self.simulator.clear_map()
     
     
   def on_draw_invisibles( self, widget ):    

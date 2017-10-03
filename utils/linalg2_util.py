@@ -49,6 +49,8 @@ def mag( a ):
 # get the unit vector of a vector
 def unit( a ):
   m = mag( a )
+  if m == 0:
+    return a
   return [ a[0]/m, a[1]/m ]
 
 # get the right-hand normal of a vector

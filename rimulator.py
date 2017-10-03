@@ -59,7 +59,7 @@ class Simulator:
     gtk.main()
     
     
-  def initialize_sim( self, random=False ):
+  def initialize_sim( self, random=False, clear=False ):
     # reset the viewer
     self.viewer.control_panel_state_init()
     
@@ -73,6 +73,8 @@ class Simulator:
     # generate a random environment
     if random:
       self.map_manager.random_map( self.world )
+    elif clear:
+      self.map_manager.clear_map( self.world )
     else:
       self.map_manager.apply_to_world( self.world )
     
@@ -121,6 +123,19 @@ class Simulator:
   def random_map( self ):
     self.pause_sim()
     self.initialize_sim( random = True )
+    
+
+  def add_obstacle(self, x, y):
+    pass
+
+  def move_goal(self, x, y):
+    self.map_manager.move_goal(self.world, x, y)
+    # self.draw_world()
+    self.initialize_sim()
+    
+  def clear_map( self ):
+    self.pause_sim()
+    self.initialize_sim( clear = True )
     
     
   def draw_world( self ):

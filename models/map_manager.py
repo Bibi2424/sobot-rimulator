@@ -118,6 +118,16 @@ class MapManager:
     
     # apply the new obstacles and goal to the world
     self.apply_to_world( world )
+
+
+  def move_goal(self, world, x, y):
+    self.current_goal = [x, y]
+    self.apply_to_world( world )
+
+  def clear_map(self, world):
+    self.current_obstacles = []
+    self.current_goal = None
+    self.apply_to_world( world )
     
     
   def save_map( self, filename ):
@@ -138,6 +148,8 @@ class MapManager:
       world.add_obstacle( obstacle )
       
     # program the robot supervisors
+    if self.current_goal == None:
+      return
     for robot in world.robots:
       robot.supervisor.goal = self.current_goal[:]
       
