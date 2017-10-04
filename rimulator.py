@@ -135,7 +135,6 @@ class Simulator:
   def move_goal(self, x, y):
     self.map_manager.move_goal( self.world, x, y )
     self.draw_world()
-    # self.initialize_sim()
     
   def clear_map( self ):
     self.pause_sim()

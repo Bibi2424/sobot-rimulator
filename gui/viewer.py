@@ -253,25 +253,27 @@ class Viewer:
     self.cursor_x = event.x
     self.cursor_y = event.y
     if event.type == gtk.gdk.BUTTON_PRESS and event.button == 1:
-        obj = self.simulator.get_object()
-        print obj
+        #TODO: Implement object selection by left-click
+        # obj = self.simulator.get_object()
+        pass
     if event.type == gtk.gdk.BUTTON_PRESS and event.button == 3:
         self.right_click_menu.popup(None, None, None, event.button, event.time, event)
 
   def add_robot(self, widget):
-    # print 'Add robot: {}'.format(param)
+    # print 'Add robot: {}'.format(widget)
     print 'Widget : {}'.format(widget)
 
   def add_obstacle(self, widget):
+    #TODO: Be able to choose size, shape and orientation
     obstacle_x  = (self.cursor_x  - self.view_width_pixels/2) / self.pixels_per_meter
     obstacle_y  = - (self.cursor_y  - self.view_height_pixels/2) / self.pixels_per_meter
-    print 'Add obstacle: [{}:{}]'.format(obstacle_x, obstacle_y)
+    # print 'Add obstacle: [{}:{}]'.format(obstacle_x, obstacle_y)
     self.simulator.add_obstacle(obstacle_x, obstacle_y)
 
   def move_goal(self, widget):
     goal_x  = (self.cursor_x  - self.view_width_pixels/2) / self.pixels_per_meter
     goal_y  = - (self.cursor_y  - self.view_height_pixels/2) / self.pixels_per_meter
-    print 'Move Gaol to [{}:{}]'.format(goal_x, goal_y)
+    # print 'Move Goal to [{}:{}]'.format(goal_x, goal_y)
     self.simulator.move_goal(goal_x, goal_y)
 
   def on_play( self, widget ):
