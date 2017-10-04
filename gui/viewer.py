@@ -62,6 +62,7 @@ class Viewer:
     self.drawing_area = gtk.DrawingArea()
     self.drawing_area.set_size_request( self.view_width_pixels, self.view_height_pixels )
     self.drawing_area.connect( 'expose_event', self.on_expose )
+    self.drawing_area.connect( 'scroll_event', self.on_scroll )
     
     # initialize the painter
     self.painter = Painter( self.drawing_area, self.pixels_per_meter )
@@ -143,9 +144,9 @@ class Viewer:
 
     # Create Right Click Menu
     self.right_click_menu = gtk.Menu()
-    self.window.connect_object("button_press_event", self.show_right_clicked_menu, self.right_click_menu)
     self.cursor_x = None
     self.cursor_y = None
+    self.window.connect("button_press_event", self.on_press_event)
 
     # Create items for the menu
     self.right_menu_add_robot_item = gtk.MenuItem("Add Robot")
@@ -247,20 +248,25 @@ class Viewer:
     
     
   # EVENT HANDLERS:
-  def show_right_clicked_menu(self, widget, event):
+  def on_press_event(self, widget, event):
     # print 'Event [{}:{}]'.format(event.x, event.y)
     self.cursor_x = event.x
     self.cursor_y = event.y
+    if event.type == gtk.gdk.BUTTON_PRESS and event.button == 1:
+        obj = self.simulator.get_object()
+        print obj
     if event.type == gtk.gdk.BUTTON_PRESS and event.button == 3:
-        widget.popup(None, None, None, event.button, event.time, event)
+        self.right_click_menu.popup(None, None, None, event.button, event.time, event)
 
   def add_robot(self, widget):
     # print 'Add robot: {}'.format(param)
     print 'Widget : {}'.format(widget)
 
   def add_obstacle(self, widget):
-    print 'Add obstacle: [{}:{}]'.format(self.cursor_x, self.cursor_y)
-    self.simulator.add_obstacle(self.cursor_x, self.cursor_y)
+    obstacle_x  = (self.cursor_x  - self.view_width_pixels/2) / self.pixels_per_meter
+    obstacle_y  = - (self.cursor_y  - self.view_height_pixels/2) / self.pixels_per_meter
+    print 'Add obstacle: [{}:{}]'.format(obstacle_x, obstacle_y)
+    self.simulator.add_obstacle(obstacle_x, obstacle_y)
 
   def move_goal(self, widget):
     goal_x  = (self.cursor_x  - self.view_width_pixels/2) / self.pixels_per_meter
@@ -347,6 +353,9 @@ class Viewer:
     self.painter.draw_frame( self.current_frame )
     
     
+  def on_scroll(  self, widget, event ):
+    print 'widget {}, Event {}'.format(widget, event)
+
   def on_delete( self, widget, event ):
     gtk.main_quit()
     return False

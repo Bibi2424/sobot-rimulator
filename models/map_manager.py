@@ -46,6 +46,7 @@ class MapManager:
     self.current_obstacles = []
     self.current_goal = None
 
+
   def random_map( self, world ):
     # OBSTACLE PARAMS
     obs_min_dim = OBS_MIN_DIM
@@ -120,9 +121,14 @@ class MapManager:
     self.apply_to_world( world )
 
 
+  def add_obstacle(self, world, obstacle):
+    self.current_obstacles.append(obstacle)
+
+
   def move_goal(self, world, x, y):
     self.current_goal = [x, y]
     self.apply_to_world( world )
+
 
   def clear_map(self, world):
     self.current_obstacles = []

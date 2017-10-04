@@ -126,12 +126,16 @@ class Simulator:
     
 
   def add_obstacle(self, x, y):
-    pass
+    new_obstacle = RectangleObstacle( 0.5, 0.5, Pose( x, y, 0.0 ) )
+    self.map_manager.add_obstacle( self.world, new_obstacle )
+    self.world_view.add_obstacle( new_obstacle )
+    self.map_manager.apply_to_world( self.world )
+    self.draw_world()
 
   def move_goal(self, x, y):
-    self.map_manager.move_goal(self.world, x, y)
-    # self.draw_world()
-    self.initialize_sim()
+    self.map_manager.move_goal( self.world, x, y )
+    self.draw_world()
+    # self.initialize_sim()
     
   def clear_map( self ):
     self.pause_sim()
